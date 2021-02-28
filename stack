@@ -1,0 +1,48 @@
+#!/bin/bash
+MINARGS=1
+DC="docker-compose"
+
+# Emojis
+STACK=" 🛠️ "; DONE=" ✅ "; FAIL=" ‼️ "; WARN=" ⚠️ "
+TIMEFORMAT="${STACK} for %R seconds"
+
+#************************************************
+# Manage docker images and containers
+#************************************************
+list ()     { echo $(declare -F | awk '{print $3}' | grep -Fv -e 'app' -e 'main' -e 'verify'); }
+app ()      { docker run --rm ycore/stack:1.0 php /opt/stack/src/cli/stack.php install; }
+build ()    { ${DC} -f ${SCRIPT_PATH}/contexts/app/docker-compose.yml build app; }
+loc ()      { ${DC} -f ${SCRIPT_PATH}/contexts/app/docker-compose.yml run --rm app php /opt/stack/src/cli/stack.php ${@}; }
+
+#************************************************
+# Verify that operating system is supported...
+# Ensure that Docker is running...
+#************************************************
+verify () {
+    case "$(uname -s)" in
+        Linux*)     ;;
+        Darwin*)    ;;
+        *)          echo "Unsupported operating system [$(uname -s)]. Stack supports macOS, Linux, and Windows (WSL2)." >&2
+                    exit 1
+    esac
+    if ! docker info > /dev/null 2>&1; then
+        echo -e "Docker is not running." >&2
+        exit 1
+    fi
+    SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+}
+
+#************************************************
+# Run the stack container, passing arguments
+#************************************************
+main() {
+    local fn=app
+    if test $# -gt 0 && grep -qw $1 <<< $(list) ; then
+        fn=${1}; shift
+    fi
+    time {
+        ${fn} ${@}
+    }
+}
+verify
+main "${@}"

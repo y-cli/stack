@@ -1,0 +1,20 @@
+{
+    "name": "y-cli/stack",
+    "description": "Simple, quick, local development experience using Docker containers.",
+    "keywords": [
+        "stack",
+        "nginx",
+        "php",
+        "docker"
+    ],
+    "license": "MIT",
+    "require": {
+        "mnapoli/silly": "~1.0",
+        "symfony/process": "^5.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Stack\\": "cli/Stack/"
+        }
+    }
+}

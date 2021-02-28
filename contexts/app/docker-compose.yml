@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: ../../
+      dockerfile: contexts/app/Dockerfile
+      args:
+        - PHP_STACK_VERSION=${PHP_STACK_VERSION:-8-alpine}
+        - PHP_APK_VERSION=${PHP_APK_VERSION:-php8}
+        - COMPOSER_VERSION=${COMPOSER_VERSION:-2}
+    container_name: stack-app
+    image: ycore/stack:1.0
+    # during development mount volume only - when deployed, use copy in dockerfile
+    # volumes:
+    #   - ${HOME}/D4/Dropbox/github/y-cli/stk/src:/opt/stack/src:cached
+    #   - ${HOME}/D4/Dropbox/github/y-cli/stk/vendor:/opt/stack/vendor:cached
