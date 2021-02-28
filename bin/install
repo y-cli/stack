@@ -1,22 +1,12 @@
-#!/bin/bash
-MINARGS=1
-DC="docker-compose"
-STACK_PATH=${HOME}/.config/stack
-# Emojis
-STACKED=" 🛠️ "; DONE=" ✅ "; FAIL=" ‼️ "; WARN=" ⚠️ "
-TIMEFORMAT="${STACKED} for %R seconds"
-
-#************************************************
-# Manage docker images and containers
-#************************************************
-app ()      { docker run --rm ycore/stack:1.0 php /opt/stack/src/cli/stack.php install; }
-list ()     { echo $(declare -F | awk '{print $3}' | grep -Fv -e 'app' -e 'main' -e 'verify'); }
+# curl -s https://raw.githubusercontent.com/y-cli/stack/main/bin/install | bash
+STACK_PATH="${HOME}/.config/stack"
+STACK_URL="https://raw.githubusercontent.com/y-cli/stack/main/bin/stack"
 
 #************************************************
 # Verify that operating system is supported...
 # Ensure that Docker is running...
 #************************************************
-verify () {
+verify() {
     case "$(uname -s)" in
         Linux*)     ;;
         Darwin*)    ;;
@@ -31,16 +21,18 @@ verify () {
 }
 
 #************************************************
-# Run the stack container, passing arguments
+# Install the main stack script on local machine
 #************************************************
 main() {
-    local fn=app
-    if test $# -gt 0 && grep -qw $1 <<< $(list) ; then
-        fn=${1}; shift
-    fi
-    time {
-        ${fn} ${@}
-    }
+    mkdir -p ${STACK_PATH}/bin && \
+    curl -s ${STACK_URL} > ${STACK_PATH}/bin/stack && \
+    chmod u+x,g+x ${STACK_PATH}/bin/stack && \
+    ln -sf ${STACK_PATH}/bin/stack /usr/local/bin/stack && \
+    echo "Installed stack into ${STACK_PATH}/bin/stack" && \
+    echo " and linked ${STACK_PATH}/bin/stack to /usr/local/bin/stack" && \
+    exit 0
+
+    echo "Failed to install stack into ${STACK_PATH}/bin/stack. Please check your internet cconnection and file permission."
 }
 verify
 main "${@}"
