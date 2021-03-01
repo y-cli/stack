@@ -22,7 +22,6 @@ RUN php -r "readfile('http://getcomposer.org/installer');" | \
 # ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
 # during development mount volume only - when deployed, use copy in dockerfile
-COPY ./src /opt/stack/src
+COPY ./src /opt/stack
 RUN cd /opt/stack && \
-    mv /opt/stack/src/composer.json /opt/stack/composer.json && \
     composer install -o --quiet

@@ -4,7 +4,7 @@
 define('STACK_PATH', './stack/install');
 define('STACK_VERSION', '1.0.0');
 
-require __DIR__.'/../../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
 use Silly\Application;
 use Symfony\Component\Console\Output\OutputInterface;

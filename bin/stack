@@ -8,7 +8,8 @@ TIMEFORMAT="${STACKED}'ed for %R seconds"
 #************************************************
 # Manage docker images and containers
 #************************************************
-app ()      { docker run --rm ycore/stack:${TAG} php /opt/stack/src/cli/stack.php; }
+app ()      { docker run --rm ycore/stack:${TAG} php /opt/stack/cli/stack.php; }
+run ()      { docker run --rm ycore/stack:${TAG} ${@}; }
 _fn ()      { echo $(declare -F | awk '{print $3}' | grep -Fv -e 'app' -e '_fn' -e 'main' -e 'verify'); }
 
 #************************************************
