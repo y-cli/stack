@@ -1,0 +1,3 @@
+SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)"
+docker image prune --force ${@}
+docker-compose -f ${SCRIPT_PATH}/contexts/docker-compose.yml build

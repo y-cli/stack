@@ -25,4 +25,4 @@ RUN php -r "readfile('http://getcomposer.org/installer');" | \
 COPY ./src /opt/stack/src
 RUN cd /opt/stack && \
     mv /opt/stack/src/composer.json /opt/stack/composer.json && \
-    composer install -o
+    composer install -o --quiet

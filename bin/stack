@@ -1,16 +1,15 @@
 #!/bin/bash
-MINARGS=1
 DC="docker-compose"
-STACK_PATH=${HOME}/.config/stack
+TAG="1.0"
 # Emojis
-STACKED=" 🛠️ "; DONE=" ✅ "; FAIL=" ‼️ "; WARN=" ⚠️ "
-TIMEFORMAT="${STACKED} for %R seconds"
+STACKED="🛠️ "; DONE=" ✅ "; FAIL=" ‼️ "; WARN=" ⚠️ "
+TIMEFORMAT="${STACKED}'ed for %R seconds"
 
 #************************************************
 # Manage docker images and containers
 #************************************************
-app ()      { docker run --rm ycore/stack:1.0 php /opt/stack/src/cli/stack.php install; }
-list ()     { echo $(declare -F | awk '{print $3}' | grep -Fv -e 'app' -e 'main' -e 'verify'); }
+app ()      { docker run --rm ycore/stack:${TAG} php /opt/stack/src/cli/stack.php; }
+_fn ()      { echo $(declare -F | awk '{print $3}' | grep -Fv -e 'app' -e '_fn' -e 'main' -e 'verify'); }
 
 #************************************************
 # Verify that operating system is supported...
@@ -27,7 +26,6 @@ verify () {
         echo -e "Docker is not running." >&2
         exit 1
     fi
-    SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)"
 }
 
 #************************************************
@@ -35,7 +33,7 @@ verify () {
 #************************************************
 main() {
     local fn=app
-    if test $# -gt 0 && grep -qw $1 <<< $(list) ; then
+    if test $# -gt 0 && grep -qw $1 <<< $(_fn) ; then
         fn=${1}; shift
     fi
     time {

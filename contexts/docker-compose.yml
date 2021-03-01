@@ -3,7 +3,7 @@ version: '3.7'
 services:
   app:
     build:
-      context: ../../
+      context: ../
       dockerfile: contexts/app/Dockerfile
       args:
         - PHP_STACK_VERSION=${PHP_STACK_VERSION:-8-alpine}
